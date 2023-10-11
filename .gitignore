@@ -1,0 +1,6 @@
+/obj
+/Extras
+/bin
+**/*.log
+.vscode
+.vs
