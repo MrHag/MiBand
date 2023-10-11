@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Text.Json;
-using MiBand_Heartrate_2.Extras;
 
 enum Types{
     MESSAGE,
@@ -121,9 +120,9 @@ namespace MiBand_Heartrate_2
 
         bool _guard = false;
 
-        DeviceHeartrateFileOutput _fileOutput = null;
+        // DeviceHeartrateFileOutput _fileOutput = null;
 
-        DeviceHeartrateCSVOutput _csvOutput = null;
+        // DeviceHeartrateCSVOutput _csvOutput = null;
 
         // --------------------------------------
 
