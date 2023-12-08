@@ -1,17 +1,19 @@
 using System.ComponentModel;
 using System.Text.Json;
 
-enum Types{
+enum Types
+{
     MESSAGE,
     HEARTRATE
 }
 
 class Packet
 {
-    public Types type {get; set;}
-    public string value {get; set;}
+    public Types type { get; set; }
+    public string value { get; set; }
 
-    public Packet(Types type, object value){
+    public Packet(Types type, object value)
+    {
         this.type = type;
         this.value = value.ToString();
     }
@@ -189,13 +191,13 @@ namespace MiBand_Heartrate_2
             else if (e.PropertyName == "HeartrateMonitorStarted")
             {
                 //CommandManager.InvalidateRequerySuggested();
-                 StartPr.Log($"Heartrate started");
+                StartPr.Log($"Heartrate started");
             }
             else if (e.PropertyName == "Heartrate")
             {
                 //StartPr.Log($"Heartrate: {Device.Heartrate}");
                 var json = JsonSerializer.Serialize(new Packet(Types.HEARTRATE, Device.Heartrate));
-                Console.WriteLine(json);
+                StartPr.Send(json);
             }
         }
 

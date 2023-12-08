@@ -11,6 +11,8 @@ namespace MiBand_Heartrate_2
         public delegate void Notif(string val);
         static public event Notif ondata;
 
+        static public event Notif onsend;
+
         static Connection connection = new Connection();
 
         static Devices.Device? device = null;
@@ -30,11 +32,33 @@ namespace MiBand_Heartrate_2
             ondata?.Invoke(val);
         }
 
+        static public void Send(string json)
+        {
+            onsend?.Invoke(json);
+        }
+
         static public void Main()
         {
-            ondata += (data)=>{
+
+            MiBandServer server = new MiBandServer();
+
+            var serverThread = new Thread(new ThreadStart(server.StartListening));
+
+            serverThread.Start();
+
+            Console.WriteLine("Listenning on 127.0.0.1:58689");
+
+            ondata += (data) =>
+            {
                 var json = JsonSerializer.Serialize(new Packet(Types.MESSAGE, data));
                 Console.WriteLine(json);
+                server.SendLine(json);
+            };
+
+            onsend += (json) =>
+            {
+                Console.WriteLine(json);
+                server.SendLine(json);
             };
 
             ondata?.Invoke("STARTING");
@@ -82,8 +106,8 @@ namespace MiBand_Heartrate_2
                 connection.SelectedDevice = dev;
                 Devices.Device devi = connection.Connect();
                 ondata?.Invoke(devi.Name);
-                SelectedDevice = devi;
                 connection.Devices.CollectionChanged -= TryConnect;
+                SelectedDevice = devi;
             }
         }
 

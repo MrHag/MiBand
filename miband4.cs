@@ -360,6 +360,7 @@ namespace MiBand_Heartrate_2.Devices
 
         void RunHeartrateKeepAlive()
         {
+            StartPr.Log("HeartrateKeepAlive: true");
             try
             {
                 while (_heartrateCharacteristic != null)
@@ -369,6 +370,10 @@ namespace MiBand_Heartrate_2.Devices
                 }
             }
             catch (ThreadAbortException) { }
+            finally
+            {
+                StartPr.Log("HeartrateKeepAlive: false");
+            }
         }
     }
 }
