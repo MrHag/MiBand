@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Text.Json;
+using MiBand_Heartrate_2.Devices;
 using Windows.Devices.Enumeration;
 
 namespace MiBand_Heartrate_2
@@ -16,6 +17,8 @@ namespace MiBand_Heartrate_2
         static Connection connection = new Connection();
 
         static Devices.Device? device = null;
+
+        static Config config = null;
 
         static public Devices.Device? SelectedDevice
         {
@@ -39,6 +42,8 @@ namespace MiBand_Heartrate_2
 
         static public void Main()
         {
+
+            config = Config.Load("config.json");
 
             MiBandServer server = new MiBandServer();
 
@@ -103,19 +108,20 @@ namespace MiBand_Heartrate_2
             {
                 DeviceInformation dev = (DeviceInformation)e.NewItems[0];
                 ondata?.Invoke(dev.Name);
-                connection.SelectedDevice = dev;
-                Devices.Device devi = connection.Connect();
-                ondata?.Invoke(devi.Name);
+                Device device = new MiBand4_Device(dev, config.Key);
+                device.Connect();
                 connection.Devices.CollectionChanged -= TryConnect;
-                SelectedDevice = devi;
+                SelectedDevice = device;
             }
         }
 
 
         static void Start()
         {
-            BandDock band = new BandDock();
-            band.Device = SelectedDevice;
+            BandDock band = new BandDock
+            {
+                Device = SelectedDevice
+            };
 
             band.Start();
         }

@@ -19,18 +19,6 @@ namespace MiBand_Heartrate_2
             }
         }
 
-        DeviceInformation _selectedDevice;
-
-        public DeviceInformation SelectedDevice
-        {
-            get { return _selectedDevice; }
-            set
-            {
-                _selectedDevice = value;
-                //InvokePropertyChanged("SelectedDevice");
-            }
-        }
-
         DeviceModel _deviceModel = DeviceModel.MIBAND_4;
 
         public DeviceModel DeviceModel
@@ -102,18 +90,6 @@ namespace MiBand_Heartrate_2
         }
 
         // --------------------------------------
-
-        public Device? Connect()
-        {
-            Device device = new MiBand4_Device(SelectedDevice, "7c6fb4e96b11d0bc1732d95f5da3ba59");
-            StartPr.Log("Connecting");
-            if (device != null)
-            {
-                device.Connect();
-                return device;
-            }
-            return null;
-        }
 
     }
 }
